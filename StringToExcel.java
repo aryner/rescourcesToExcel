@@ -22,6 +22,7 @@ public class StringToExcel{
       buffReader = new BufferedReader(reader);
 
       ArrayList<String> resources = new ArrayList<String>();
+      ArrayList<String> resourceNames = new ArrayList<String>();
       int startIndex = -1;
       int endIndex = -1;
       String resource = null;
@@ -33,6 +34,11 @@ public class StringToExcel{
 
           resource = output.substring(startIndex+2, endIndex);
           resources.add(resource);
+
+          endIndex = startIndex;
+          startIndex = output.indexOf("name=");
+
+          resourceNames.add(output.substring(startIndex+6,endIndex));
         }
 
         output = buffReader.readLine();
@@ -44,13 +50,19 @@ public class StringToExcel{
       Row row = sheet.createRow((short)0);
 
       Cell cell = row.createCell(0);
-      cell.setCellValue(createHelper.createRichTextString("English"));
+      cell.setCellValue(createHelper.createRichTextString("Resource"));
       cell = row.createCell(1);
+      cell.setCellValue(createHelper.createRichTextString("English"));
+      cell = row.createCell(2);
       cell.setCellValue(createHelper.createRichTextString("French"));
 
       for(int i=1; i<resources.size(); i++) {
         row = sheet.createRow((short)i);
+
         cell = row.createCell(0);
+        cell.setCellValue(createHelper.createRichTextString(resourceNames.get(i)));
+
+        cell = row.createCell(1);
         cell.setCellValue(createHelper.createRichTextString(resources.get(i)));
       }
 
